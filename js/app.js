@@ -16,8 +16,7 @@ const starPanel = document.querySelector('.stars');
 const starWinPanel = document.querySelector('#end-stars');
 // hook up the deck
 const deck = document.querySelector('.deck');
-//live HTML collection of opend cards
-const matchedCards = document.getElementsByClassName('match');
+
 //end of global variables
 
 //invoke Start NEw GAME function, 
@@ -168,7 +167,8 @@ function makeMatch(a, b) {
     b.classList.remove('open', 'show');
 
 
-
+    //live HTML collection of opend cards
+    const matchedCards = document.getElementsByClassName('match');
     //checking win condition:
     if (matchedCards.length === deck.children.length) {
         document.querySelector('#win').textContent = movesCounter;
