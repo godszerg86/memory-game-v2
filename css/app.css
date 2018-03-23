@@ -100,6 +100,11 @@ h1 {
     width: 345px;
     margin-bottom: 10px;
 }
+.score-panel-hide {
+    text-align: left;
+    width: 345px;
+    margin-bottom: 10px;
+}
 
 .score-panel .stars {
     margin: 0;
@@ -171,8 +176,9 @@ h1 {
 .timer-word {
     margin-left: 20px;
 }
-#timer{
-  margin: 0 110px 0 5px;
+
+#timer {
+    margin: 0 110px 0 5px;
 }
 
 .win-popup {

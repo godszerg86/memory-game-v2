@@ -16,7 +16,6 @@ const starPanel = document.querySelector('.stars');
 const starWinPanel = document.querySelector('#end-stars');
 // hook up the deck
 const deck = document.querySelector('.deck');
-
 //end of global variables
 
 //invoke Start NEw GAME function, 
@@ -24,6 +23,7 @@ startNewGame();
 
 //function that start a new game and reset everything
 function startNewGame() {
+    document.querySelector('.score-panel').removeAttribute('visibility');
     //hook up all event listeners on page
     document.querySelector('.restart').addEventListener('click', startNewGame);
     document.querySelector('.newgame-style').addEventListener('click', startNewGame);
@@ -79,62 +79,47 @@ function shuffle(array) {
 //on cards mouse click function
 function cardClick(event) {
     //starting timer
+    //checking if timer is running or not
     if (!timerOnOf) {
+        //if it wasn't lunched - setInterval and assign it to timerID (we can use clearInterval only on timerID)
         timerID = setInterval(function () {
             seconds++;
             document.querySelector('#timer').textContent = seconds;
         }, 1000);
+        //set timer switch to ON (it means that timer is runing now)
         timerOnOf = true;
     }
-    //cheacking if targeted (clicked) element is a card and it havent been matched with another card before 
+    //checking if targeted (clicked) element is a card and it haven't been matched with another card before  and it haven't been opened and its only two cards opened at one time
     if (!event.target.classList.contains('match') && event.target.tagName === 'LI' && !event.target.classList.contains('open') && deckArray.length < 2) {
-        //add this element to array and use function 'cardOpener' to flip <li> and get it's index
+        //add this element to array and use function 'cardOpener' to flip <li>
         deckArray.push(cardOpener(event));
-        // cheack how much elements in temporary array, if just one - do nothing and wating for another card to be clicked
-        if (deckArray.length < 2) {} else {
-            // else (if thereis 2 elements in temporary array) do next:
-            // create an live HTML collection of all <li> inside <ul>
-            const cardList = deck.children;
-            // assign to variables <li> that was clicked by their indexes (indexes was returned from function 'cardOpener')
-            const a = cardList[deckArray[0]];
-            const b = cardList[deckArray[1]];
+        // check how much elements in temporary array, if just one - do nothing and wating for another card to be clicked
+        if (deckArray.length == 2) {
+            // if thereis 2 elements in temporary array do next:
             // assign result of function areTheyMatch to variable (true or false)
-            const matchCheck = areTheyMatch(a, b);
+            const matchCheck = areTheyMatch(deckArray[0], deckArray[1]);
             if (matchCheck) {
                 //if true, then call function 'makeMatch' with delay 350ms and pass in our current <li> elements
-                setTimeout(makeMatch, 350, a, b);
+                setTimeout(makeMatch, 350, deckArray[0], deckArray[1]);
             } else {
                 //if false, then call function 'shakerFunc' and 'hideCards' with delay 200ms and 900ms (to let them stay a little bit longer,
                 // so user can memorize position of cards in the game
                 //and pass in our current <li> elements
-                setTimeout(shakerFunc, 200, a, b);
-                setTimeout(hideCards, 900, a, b);
+                setTimeout(shakerFunc, 200, deckArray[0], deckArray[1]);
+                setTimeout(hideCards, 900, deckArray[0], deckArray[1]);
             }
             //increasing our move counter;
             movesCounter++
+            //check if stars should be removed
             starRemover();
         }
     }
     //displaying current move counter
     document.querySelector('.moves').textContent = movesCounter;
-    //removeing stars function
 }
-
-//function that remove stars base on movesCounter and starIndex
-function starRemover() {
-    if (movesCounter === 17 && starIndex === 3) {
-        document.querySelector('.stars').lastElementChild.remove();
-        starIndex = 2;
-    } else if (movesCounter === 20 && starIndex == 2) {
-        document.querySelector('.stars').lastElementChild.remove();
-        starIndex = 1;
-    }
-};
 
 //function for flipping cards
 function cardOpener(event) {
-    // assign HTML live collection of all <li>, who are childer of <ul>
-    const cardList = deck.children;
     // adding class 'open' to clicked <li>
     event.target.classList.add('open');
     // adding class 'show' to clicked <li> with small 150ms delay, so it will make smooth flipping effect,
@@ -142,17 +127,14 @@ function cardOpener(event) {
     setTimeout(function () {
         event.target.classList.add('show');
     }, 150);
-    //returning index of current <li> element that was clicked and flipped
-    return Array.prototype.indexOf.call(cardList, event.target);
+    //returning current <li> element that was clicked and flipped
+    return event.target;
 }
 
-//function checks if the two passed in <li> elements match or not
+//function checks if the two passed in <li> elements are match or not
 function areTheyMatch(a, b) {
-    //inside each <li> there is a <i> tag, so we assign each to the temporary variable
-    let tempA = a.children;
-    let tempB = b.children;
     // if class lists of inner <i> tags matches then return true, othewise return false
-    if (tempA[0].classList.value === tempB[0].classList.value) {
+    if (a.firstElementChild.classList.value === b.firstElementChild.classList.value) {
         return true;
     } else {
         return false;
@@ -165,8 +147,14 @@ function makeMatch(a, b) {
     a.classList.remove('open', 'show');
     b.classList.add('match', 'tada');
     b.classList.remove('open', 'show');
+    //checking for win condition
+    winCondition();
+    //reseting temporary array that holds 2 cards (2 <li>)
+    setTimeout(resetDeckArray, 900);
 
+}
 
+function winCondition() {
     //live HTML collection of opend cards
     const matchedCards = document.getElementsByClassName('match');
     //checking win condition:
@@ -180,10 +168,9 @@ function makeMatch(a, b) {
         document.querySelector('.win-popup').classList.add('sh');
         //remove event listener from our deck, so user cannot manipulate on card elemenets anymore
         deck.removeEventListener('click', cardClick);
+        // hide score panel
+        document.querySelector('.score-panel').style.visibility = 'hidden';
     }
-    //reseting temporary array that holds 2 cards (2 <li>)
-    setTimeout(resetDeckArray, 900);
-
 }
 
 // function shake cards if they don't match, make them red
@@ -194,7 +181,7 @@ function shakerFunc(a, b) {
     b.style.background = '#c7484e';
 };
 
-// if cards are not match this function hide them back by removing 'open', 'show' and 'shaking' classes
+// if cards are not match this function hide them back by removing 'open', 'show' and 'shaking' classes and red background
 function hideCards(a, b) {
     a.classList.remove('open', 'show', 'shaking');
     a.removeAttribute('style');
@@ -204,27 +191,28 @@ function hideCards(a, b) {
     resetDeckArray();
 }
 
-
-
-
-
-//timer stop function (if 'clear' is true - reset timer to 0 otherwise keep it)
+//timer stop function 
 function timerStop(clear) {
+    //clear setInterval for timer
     clearInterval(timerID);
+    //reseting timerOnOf (timer isn't running)
     timerOnOf = false;
     //convert seconds to (h:m:s)
     timeConverter(seconds);
+    //reseting seconds
     seconds = 0;
+    //if 'clear' is true - reset timer to 0 otherwise keep it
     if (clear) {
         document.querySelector('#timer').textContent = seconds;
     }
-
 }
 
+//reset temporary array functionn
 function resetDeckArray() {
     deckArray = [];
 }
 
+//function converts seconds to H:M:S format.
 function timeConverter(finalSeconds) {
     const winHours = Math.floor(finalSeconds / 3600);
     finalSeconds = finalSeconds - winHours * 3600;
@@ -234,3 +222,20 @@ function timeConverter(finalSeconds) {
     document.querySelector('#time-min').textContent = winMinutes;
     document.querySelector('#time-sec').textContent = finalSeconds;
 }
+
+//function that remove stars base on movesCounter and starIndex
+function starRemover() {
+    //if moves = 17 and there are 3 stars displayed
+    if (movesCounter === 17 && starIndex === 3) {
+        //remove one star
+        document.querySelector('.stars').lastElementChild.remove();
+        // change starIndex to 2 (it means that now only two stars displayed)
+        starIndex = 2;
+        //if moves = 20 and there are 2 stars displayed
+    } else if (movesCounter === 20 && starIndex == 2) {
+        //remove one star
+        document.querySelector('.stars').lastElementChild.remove();
+        // change starIndex to 1 (it means that now only one star displayed)
+        starIndex = 1;
+    } // I don't remove lats star so player could earn at least one card at the end of the game
+};
