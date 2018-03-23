@@ -239,3 +239,24 @@ function starRemover() {
         starIndex = 1;
     } // I don't remove lats star so player could earn at least one card at the end of the game
 };
+
+
+
+
+
+
+
+
+function myNewShuffle() {
+    let myArray = deck.children;
+    for (let i = 0; i < myArray.length; i++) {
+        
+
+
+    }
+
+
+
+
+
+}
