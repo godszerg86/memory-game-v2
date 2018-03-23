@@ -95,12 +95,12 @@ function cardClick(event) {
         if (deckArray.length < 2) {} else {
             // else (if thereis 2 elements in temporary array) do next:
             // create an live HTML collection of all <li> inside <ul>
-            let cardList = deck.children;
+            const cardList = deck.children;
             // assign to variables <li> that was clicked by their indexes (indexes was returned from function 'cardOpener')
-            let a = cardList[deckArray[0]];
-            let b = cardList[deckArray[1]];
+            const a = cardList[deckArray[0]];
+            const b = cardList[deckArray[1]];
             // assign result of function areTheyMatch to variable (true or false)
-            let matchCheck = areTheyMatch(a, b);
+            const matchCheck = areTheyMatch(a, b);
             if (matchCheck) {
                 //if true, then call function 'makeMatch' with delay 350ms and pass in our current <li> elements
                 setTimeout(makeMatch, 350, a, b);
@@ -135,7 +135,7 @@ function starRemover() {
 //function for flipping cards
 function cardOpener(event) {
     // assign HTML live collection of all <li>, who are childer of <ul>
-    let cardList = deck.children;
+    const cardList = deck.children;
     // adding class 'open' to clicked <li>
     event.target.classList.add('open');
     // adding class 'show' to clicked <li> with small 150ms delay, so it will make smooth flipping effect,
@@ -182,7 +182,7 @@ function makeMatch(a, b) {
         deck.removeEventListener('click', cardClick);
     }
     //reseting temporary array that holds 2 cards (2 <li>)
-    setTimeout(resetDeckArray, 800);
+    setTimeout(resetDeckArray, 900);
 
 }
 
@@ -226,9 +226,9 @@ function resetDeckArray() {
 }
 
 function timeConverter(finalSeconds) {
-    let winHours = Math.floor(finalSeconds / 3600);
+    const winHours = Math.floor(finalSeconds / 3600);
     finalSeconds = finalSeconds - winHours * 3600;
-    let winMinutes = Math.floor(finalSeconds / 60);
+    const winMinutes = Math.floor(finalSeconds / 60);
     finalSeconds = finalSeconds - winMinutes * 60;
     document.querySelector('#time-hr').textContent = winHours;
     document.querySelector('#time-min').textContent = winMinutes;
