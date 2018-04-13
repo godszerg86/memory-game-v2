@@ -20,11 +20,9 @@ The game board consists of sixteen "cards" arranged in a grid. The deck is made 
  ![open first](rdm_img/1.gif)
 * The player then turns over a second card, trying to find the corresponding card with the same symbol.
 * If the cards match, both cards stay flipped over.  
-
  ![open first](rdm_img/3.gif)
 * If the cards do not match, both cards are flipped face down.  
- ![open first](rdm_img/2.gif)
-
+ ![open first](rdm_img/2.gif)  
 * The game ends once all cards have been correctly matched. And win screen will pop up
 ![open first](rdm_img/4.gif)
 ## Known bugs and ussues
