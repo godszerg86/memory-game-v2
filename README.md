@@ -23,7 +23,7 @@ The game board consists of sixteen "cards" arranged in a grid. The deck is made 
 * The player flips one card over to reveal its underlying symbol.
  ![open first](rdm_img/1.gif)
 * The player then turns over a second card, trying to find the corresponding card with the same symbol.
-* If the cards match, both cards stay flipped over.
+* If the cards match, both cards stay flipped over.  
  ![open first](rdm_img/3.gif)
 * If the cards do not match, both cards are flipped face down.  
  ![open first](rdm_img/2.gif)
